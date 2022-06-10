@@ -10,7 +10,7 @@ define('TOKEN_TYPE_ACCESS', 'access');
 define('UNAUTHORIZED_REQUEST_CODE', 401);
 
 define('ADMIN_ACCESS_TOKEN_EXP_TIME', 60*60*24*30); //30 day
-define('STUDENT_ACCESS_TOKEN_EXP_TIME', 60*60*24); //1 day
+define('CLIENT_ACCESS_TOKEN_EXP_TIME', 60*60*24); //1 day
 
 require_once(__DIR__.'/../jwt/jwt.php');
 
