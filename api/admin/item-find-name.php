@@ -9,24 +9,25 @@ $requestBody = Utility::getRequestBody();
 
 $decodedToken = JwtUtil::validateAccessToken(USER_ROLE_ADMIN);
 
-$categoryIndex = $requestBody['category'];
-$searchCategory =  '%'.$categoryIndex.'%';
+$nameIndex = $requestBody['name'];
+$searchName =  '%'.$nameIndex.'%';
 
 $result = DBUtil::executeQuery(
     $connection,
-    "SELECT id, category FROM category WHERE category LIKE '$searchCategory'"
+    "SELECT i.id, i.name, i.weight, i.unit, i.unit_price, i.quantity, i.code, i.thumbnail, c.category 
+FROM item i, category c WHERE c.id = i.category_id AND name LIKE '$searchName' GROUP BY i.id ORDER BY i.name ASC"
 );
 
 if ($result) {
     Utility::sendResponse(
         true,
-        $result[0]['category']." is fetched!",
+        $requestBody['name']." are fetched!",
         $result
     );
 } else {
     Utility::sendResponse(
         false,
-        $result[0]['category']." not found!",
+        $requestBody['name']." not found!",
         null
     );
 }

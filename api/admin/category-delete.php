@@ -9,23 +9,37 @@ $requestBody = Utility::getRequestBody();
 
 $decodedToken = JwtUtil::validateAccessToken(USER_ROLE_ADMIN);
 
-$result = DBUtil::executeUpdate(
+$checkResults = DBUtil::executeQuery(
     $connection,
-    "DELETE FROM category WHERE id = ?",
+    "SELECT id FROM category WHERE id = ?",
     $requestBody['id']
 );
 
-if ($result) {
-    Utility::sendResponse(
-        true,
-        "Category Deleted!",
-        $requestBody
-    );
-} else {
+if ($checkResults == null) {
     Utility::sendResponse(
         false,
-        "Category not deleted!",
+        "Selected category is not exist!",
         null
     );
-}
+} else {
+    $result = DBUtil::executeUpdate(
+        $connection,
+        "DELETE FROM category WHERE id = ?",
+        $requestBody['id']
+    );
 
+    if ($result) {
+        Utility::sendResponse(
+            true,
+            "Category Deleted!",
+            $requestBody
+        );
+    } else {
+        Utility::sendResponse(
+            false,
+            "Category not deleted!",
+            null
+        );
+    }
+
+}

@@ -9,25 +9,51 @@ $requestBody = Utility::getRequestBody();
 
 $decodedToken = JwtUtil::validateAccessToken(USER_ROLE_ADMIN);
 
-$result = DBUtil::executeUpdate(
+$checkId = DBUtil::executeQuery(
     $connection,
-    "UPDATE category SET category = ? WHERE id = ?",
-    $requestBody['category'],
+    "SELECT id FROM category WHERE id = ?",
     $requestBody['id']
 );
 
-echo $result;
-
-if ($result) {
-    Utility::sendResponse(
-        true,
-        "Category updated!",
-        $requestBody
-    );
-} else {
+if ($checkId == null) {
     Utility::sendResponse(
         false,
-        "Update fail!",
+        "Selected category not found!",
         null
     );
+} else {
+    $checkCategory = DBUtil::executeQuery(
+        $connection,
+        "SELECT category FROM category WHERE category = ?",
+        $requestBody['category']
+    );
+
+    if ($checkCategory != null) {
+        Utility::sendResponse(
+            false,
+            $requestBody['category']. " is already exist!",
+            null
+        );
+    } else {
+        $result = DBUtil::executeUpdate(
+            $connection,
+            "UPDATE category SET category = ? WHERE id = ?",
+            $requestBody['category'],
+            $requestBody['id']
+        );
+
+        if ($result) {
+            Utility::sendResponse(
+                true,
+                $requestBody['category']." updated!",
+                $requestBody
+            );
+        } else {
+            Utility::sendResponse(
+                false,
+                $requestBody['category']." rename fail!",
+                null
+            );
+        }
+    }
 }

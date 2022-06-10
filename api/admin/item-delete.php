@@ -9,23 +9,38 @@ $requestBody = Utility::getRequestBody();
 
 $decodedToken = JwtUtil::validateAccessToken(USER_ROLE_ADMIN);
 
-$result = DBUtil::executeUpdate(
+$checkId = DBUtil::executeQuery(
     $connection,
-    "DELETE FROM item WHERE id = ?",
+    "SELECT name FROM item WHERE id = ?",
     $requestBody['id']
 );
 
-if ($result) {
-    Utility::sendResponse(
-        true,
-        "Item Deleted!",
-        $requestBody
-    );
-} else {
+if ($checkId == null) {
     Utility::sendResponse(
         false,
-        "Item not deleted!",
+        "Selected item not exist",
         null
     );
+} else {
+    $result = DBUtil::executeUpdate(
+        $connection,
+        "DELETE FROM item WHERE id = ?",
+        $requestBody['id']
+    );
+
+    if ($result) {
+        Utility::sendResponse(
+            true,
+            "Item Deleted!",
+            $requestBody
+        );
+    } else {
+        Utility::sendResponse(
+            false,
+            "Item not deleted!",
+            null
+        );
+    }
 }
+
 

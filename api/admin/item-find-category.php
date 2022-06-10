@@ -19,13 +19,13 @@ FROM item i, category c WHERE c.id = i.category_id AND category = ? GROUP BY i.i
 if ($result) {
     Utility::sendResponse(
         true,
-        "Items are fetched!",
+        $requestBody['name']." are fetched!",
         $result
     );
 } else {
     Utility::sendResponse(
         false,
-        "Items not found!",
+        $requestBody['name']." not found!",
         null
     );
 }
