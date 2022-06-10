@@ -21,13 +21,13 @@ FROM item i, category c WHERE c.id = i.category_id AND code LIKE '$searchCode' G
 if ($result) {
     Utility::sendResponse(
         true,
-        $requestBody['code']." are fetched!",
+        $result[0]['name']." are found!",
         $result
     );
 } else {
     Utility::sendResponse(
         false,
-        $requestBody['code']." not found!",
+        "item not found!",
         null
     );
 }
