@@ -19,7 +19,7 @@ class DBConn {
         try {
             $this->servername = 'localhost';
             $this->username = 'root';
-            $this->password = 'root';
+            $this->password = '';
             $this->dbname = 'dilshan_slmart';
 
             $this->conn = new PDO (
